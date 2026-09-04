@@ -1,0 +1,123 @@
+@import 'tailwindcss';
+
+/* ---------------------------------------------------------------------------
+   Design tokens.
+   Monochrome by design: the only colour in the system is the availability dot.
+   Project imagery is expected to supply whatever colour the page has.
+--------------------------------------------------------------------------- */
+@theme {
+  --color-paper: #f5f5f2;
+  --color-paper-raised: #fbfbf9;
+  --color-ink: #111111;
+  --color-ink-soft: #4a4a4a;
+  --color-ink-muted: #777777;
+  --color-line: #e2e2dd;
+  --color-line-strong: #cfcfc8;
+
+  --color-night: #171717;
+  --color-night-raised: #212121;
+  --color-night-line: #2f2f2f;
+  --color-night-muted: #8a8a8a;
+
+  --color-signal: #2fa84f;
+
+  --font-display: var(--font-space-grotesk), ui-sans-serif, system-ui, sans-serif;
+  --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+
+  /* Section rhythm — large, slide-like blocks. */
+  --spacing-section: clamp(6rem, 12vw, 11rem);
+}
+
+/* ---------------------------------------------------------------------------
+   Hero entrance.
+
+   Deliberately CSS rather than JavaScript. The hero is the first thing anyone
+   sees, so it must never depend on a bundle arriving: a CSS animation plays
+   even if JavaScript is slow, blocked or disabled, and cannot get stuck
+   half-way. `backwards` fill applies the from-state during the delay, which is
+   what staggers the lines.
+--------------------------------------------------------------------------- */
+@keyframes rise {
+  from {
+    opacity: 0;
+    transform: translateY(28px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@utility animate-rise {
+  animation: rise 0.8s cubic-bezier(0.22, 1, 0.36, 1) backwards;
+}
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+    /* Keeps anchored sections clear of the sticky header. */
+    scroll-padding-top: 6rem;
+    -webkit-text-size-adjust: 100%;
+  }
+
+  body {
+    background-color: var(--color-paper);
+    color: var(--color-ink);
+    font-family: var(--font-sans);
+    font-synthesis-weight: none;
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* A single, consistent focus ring across every interactive element. */
+  :focus-visible {
+    outline: 2px solid var(--color-ink);
+    outline-offset: 3px;
+    border-radius: 2px;
+  }
+
+  ::selection {
+    background-color: var(--color-ink);
+    color: var(--color-paper);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    html {
+      scroll-behavior: auto;
+    }
+
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+    }
+  }
+}
+
+@utility text-outline {
+  /* The hero's outlined lettering. -webkit-text-stroke is supported everywhere
+     that matters; the color fallback keeps the name readable if it is not. */
+  color: transparent;
+  -webkit-text-stroke: 1.5px var(--color-ink);
+}
+
+@supports not ((-webkit-text-stroke: 1px black)) {
+  .text-outline {
+    color: var(--color-ink-muted);
+  }
+}
+
+@utility text-outline-invert {
+  color: transparent;
+  -webkit-text-stroke: 1.5px #ffffff;
+}
+
+/* Oversized section labels: /WORK, /ABOUT, … */
+@utility section-label {
+  font-family: var(--font-display);
+  font-weight: 500;
+  letter-spacing: -0.02em;
+  text-transform: uppercase;
+}
