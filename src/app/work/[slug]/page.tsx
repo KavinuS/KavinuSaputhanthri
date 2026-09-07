@@ -3,11 +3,11 @@ import Image from 'next/image'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
 import { Footer } from '@/components/Footer'
-import { Navbar } from '@/components/Navbar'
 import { ArchitectureFlow } from '@/components/ArchitectureFlow'
 import { Container } from '@/components/ui/Container'
 import { Reveal } from '@/components/ui/Reveal'
 import { getProject, projects } from '@/data/projects'
+import { asset } from '@/lib/base-path'
 
 type PageProps = { params: Promise<{ slug: string }> }
 
@@ -36,7 +36,6 @@ export default async function ProjectPage({ params }: PageProps) {
 
   return (
     <>
-      <Navbar />
       <main id="main" className="pb-section pt-28 lg:pt-32">
         <Container>
           <Link
@@ -97,7 +96,7 @@ export default async function ProjectPage({ params }: PageProps) {
           {/* ---- Visual ---- */}
           <Reveal className="mt-14 overflow-hidden rounded-lg border border-line bg-paper-raised lg:mt-20">
             <Image
-              src={project.image}
+              src={asset(project.image)}
               alt=""
               width={1600}
               height={1000}

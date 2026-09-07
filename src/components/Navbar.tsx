@@ -4,6 +4,7 @@ import { AnimatePresence, motion, useReducedMotion } from 'framer-motion'
 import { useEffect, useState } from 'react'
 import { AvailabilityPill } from './ui/AvailabilityPill'
 import { navLinks, site } from '@/data/site'
+import { asset } from '@/lib/base-path'
 
 export function Navbar() {
   const [open, setOpen] = useState(false)
@@ -39,7 +40,7 @@ export function Navbar() {
     <header
       className={`fixed inset-x-0 top-0 z-50 transition-colors duration-500 motion-reduce:transition-none ${
         scrolled || open
-          ? 'border-b border-line bg-paper/85 backdrop-blur-md'
+          ? 'border-b border-line bg-paper/60 backdrop-blur-sm'
           : 'border-b border-transparent'
       }`}
     >
@@ -47,7 +48,7 @@ export function Navbar() {
         aria-label="Primary"
         className="mx-auto flex w-full max-w-[1400px] items-center justify-between gap-6 px-6 py-4 sm:px-8 lg:px-12"
       >
-        <a href="/#top" className="shrink-0">
+        <a href="/#top" className="animate-nav-in shrink-0" style={{ animationDelay: '0.1s' }}>
           <span className="hidden lg:inline-block">
             <AvailabilityPill />
           </span>
@@ -58,8 +59,12 @@ export function Navbar() {
         </a>
 
         <ul className="hidden items-center gap-9 lg:flex">
-          {navLinks.map((link) => (
-            <li key={link.href}>
+          {navLinks.map((link, index) => (
+            <li
+              key={link.href}
+              className="animate-nav-in"
+              style={{ animationDelay: `${0.18 + index * 0.06}s` }}
+            >
               <a
                 href={link.href}
                 className="group relative inline-block py-1 text-sm text-ink transition-colors duration-300 hover:text-ink-muted motion-reduce:transition-none"
@@ -71,7 +76,7 @@ export function Navbar() {
           ))}
         </ul>
 
-        <div className="flex items-center gap-3">
+        <div className="animate-nav-in flex items-center gap-3" style={{ animationDelay: '0.5s' }}>
           <a
             href="/#contact"
             className="hidden items-center gap-2 rounded-full bg-ink px-5 py-2.5 text-sm font-medium text-paper transition-colors duration-300 hover:bg-ink-soft motion-reduce:transition-none sm:inline-flex"
@@ -135,7 +140,7 @@ export function Navbar() {
               <a href={site.linkedin} target="_blank" rel="noopener noreferrer">
                 LinkedIn ↗
               </a>
-              <a href={site.resume} download>
+              <a href={asset(site.resume)} download>
                 Resume ↗
               </a>
             </div>

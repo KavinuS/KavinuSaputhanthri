@@ -13,6 +13,14 @@ export const site = {
   availability: 'Available for Internship Opportunities',
   location: 'Colombo 07, Sri Lanka',
   email: 'kavinusaputhanthri2002@gmail.com',
+  /**
+   * wa.me needs the number in international form with no plus sign, no spaces
+   * and no leading zero, so local 074 056 7460 becomes 94740567460.
+   */
+  whatsapp: {
+    display: '+94 74 056 7460',
+    href: 'https://wa.me/94740567460',
+  },
   github: 'https://github.com/KavinuS',
   linkedin: 'https://www.linkedin.com/in/kavinu-saputhanthri-789290329/',
   resume: '/Kavinu-Saputhanthri-CV.pdf',

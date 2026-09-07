@@ -1,6 +1,7 @@
 import Image from 'next/image'
 import { Container } from './ui/Container'
 import { site } from '@/data/site'
+import { asset } from '@/lib/base-path'
 
 /**
  * The hero is a server component and its entrance is a pure CSS animation.
@@ -26,15 +27,15 @@ export function Hero() {
             blends that white into the paper colour instead of stamping a white
             rectangle onto the page, so only the black type and the greyscale
             portrait remain. */}
-        <div className="animate-rise relative z-10" style={{ animationDuration: '1s' }}>
+        <div className="relative z-10">
           <Image
-            src={site.heroImage}
+            src={asset(site.heroImage)}
             alt={`${site.name} — ${site.roles.join(', ')}`}
             width={1549}
             height={1015}
             priority
             sizes="(max-width: 1024px) 100vw, 1100px"
-            className="mx-auto h-auto w-full max-w-275 select-none mix-blend-multiply"
+            className="animate-glow-up mx-auto h-auto w-full max-w-275 select-none mix-blend-multiply"
           />
         </div>
 
@@ -79,7 +80,7 @@ export function Hero() {
             {[
               { label: 'GitHub', href: site.github, download: false },
               { label: 'LinkedIn', href: site.linkedin, download: false },
-              { label: 'Resume', href: site.resume, download: true },
+              { label: 'Resume', href: asset(site.resume), download: true },
             ].map((link) => (
               <a
                 key={link.label}

@@ -1,9 +1,11 @@
 import { Container } from './ui/Container'
 import { Reveal } from './ui/Reveal'
 import { site } from '@/data/site'
+import { asset } from '@/lib/base-path'
 
 const channels = [
   { label: 'Email', value: site.email, href: `mailto:${site.email}` },
+  { label: 'WhatsApp', value: site.whatsapp.display, href: site.whatsapp.href },
   { label: 'LinkedIn', value: 'in/kavinu-saputhanthri', href: site.linkedin },
   { label: 'GitHub', value: 'github.com/KavinuS', href: site.github },
 ]
@@ -60,7 +62,7 @@ export function Contact() {
           <div className="mt-10 flex flex-wrap items-center gap-x-8 gap-y-4 text-sm text-ink-muted">
             <span>{site.location}</span>
             <a
-              href={site.resume}
+              href={asset(site.resume)}
               download
               className="group inline-flex items-center gap-2 text-ink transition-colors duration-300 hover:text-ink-muted motion-reduce:transition-none"
             >

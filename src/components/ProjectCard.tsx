@@ -2,6 +2,7 @@ import Image from 'next/image'
 import Link from 'next/link'
 import { Reveal } from './ui/Reveal'
 import type { Project } from '@/data/projects'
+import { asset } from '@/lib/base-path'
 
 /**
  * A large editorial project card. Layout alternates side to side on desktop,
@@ -22,7 +23,7 @@ export function ProjectCard({ project, flipped }: { project: Project; flipped: b
             aria-hidden="true"
           >
             <Image
-              src={project.image}
+              src={asset(project.image)}
               alt=""
               width={1200}
               height={750}

@@ -9,6 +9,8 @@ type RevealProps = {
   delay?: number
   /** Distance in pixels the element travels upward into place. */
   distance?: number
+  /** Seconds the travel takes. Larger blocks want a longer, slower move. */
+  duration?: number
   className?: string
   as?: 'div' | 'section' | 'li' | 'span'
 }
@@ -25,7 +27,14 @@ type RevealProps = {
  * hiding them is invisible to the reader. Anything already on screen simply
  * stays as it is.
  */
-export function Reveal({ children, delay = 0, distance = 24, className, as = 'div' }: RevealProps) {
+export function Reveal({
+  children,
+  delay = 0,
+  distance = 24,
+  duration = 0.7,
+  className,
+  as = 'div',
+}: RevealProps) {
   const reduceMotion = useReducedMotion()
   const ref = useRef<HTMLElement>(null)
   const [animate, setAnimate] = useState(false)
@@ -58,7 +67,7 @@ export function Reveal({ children, delay = 0, distance = 24, className, as = 'di
       initial={{ opacity: 0, y: distance }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, margin: '-80px' }}
-      transition={{ duration: 0.7, delay, ease: [0.22, 1, 0.36, 1] }}
+      transition={{ duration, delay, ease: [0.22, 1, 0.36, 1] }}
     >
       {children}
     </MotionTag>

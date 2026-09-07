@@ -52,6 +52,48 @@
   animation: rise 0.8s cubic-bezier(0.22, 1, 0.36, 1) backwards;
 }
 
+/* ---------------------------------------------------------------------------
+   Glow-up: the hero image arriving after the loader lifts.
+
+   It starts blown out and slightly oversized, then settles to its true
+   brightness and scale — a lift rather than a plain fade.
+--------------------------------------------------------------------------- */
+@keyframes glow-up {
+  from {
+    opacity: 0;
+    transform: scale(1.06);
+    filter: brightness(1.75) contrast(0.8);
+  }
+  60% {
+    opacity: 1;
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+    filter: brightness(1) contrast(1);
+  }
+}
+
+@utility animate-glow-up {
+  animation: glow-up 1.2s cubic-bezier(0.22, 1, 0.36, 1) backwards;
+}
+
+/* Navigation items dropping in behind the lifting curtain. */
+@keyframes nav-in {
+  from {
+    opacity: 0;
+    transform: translateY(-12px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@utility animate-nav-in {
+  animation: nav-in 0.6s cubic-bezier(0.22, 1, 0.36, 1) backwards;
+}
+
 @layer base {
   html {
     scroll-behavior: smooth;
@@ -112,6 +154,147 @@
 @utility text-outline-invert {
   color: transparent;
   -webkit-text-stroke: 1.5px #ffffff;
+}
+
+/* ---------------------------------------------------------------------------
+   Smooth cursor follower.
+
+   Both layers are painted white and composited with `difference`, so they
+   invert against whatever sits underneath — dark on paper, light on the
+   Experience section — without knowing anything about the section they cross.
+
+   `cursor-active` is added by JavaScript, so the native pointer is never hidden
+   unless the replacement is actually running.
+--------------------------------------------------------------------------- */
+.cursor-dot,
+.cursor-ring {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 9999;
+  border-radius: 9999px;
+  pointer-events: none;
+  opacity: 0;
+  mix-blend-mode: difference;
+  transition: opacity 0.3s ease;
+  will-change: transform;
+}
+
+.cursor-dot {
+  width: 6px;
+  height: 6px;
+  background-color: #ffffff;
+}
+
+.cursor-ring {
+  width: 34px;
+  height: 34px;
+  border: 1px solid #ffffff;
+}
+
+html.cursor-visible .cursor-dot,
+html.cursor-visible .cursor-ring {
+  opacity: 1;
+}
+
+html.cursor-active,
+html.cursor-active * {
+  cursor: none;
+}
+
+/* ---------------------------------------------------------------------------
+   Loading curtain.
+
+   The overlay is `display: none` by default, so a visitor without JavaScript
+   never sees it and can never be trapped behind it. An inline script in the
+   document reveals it before first paint, and both that script and the Loader
+   component can dismiss it — whichever happens first.
+
+   While it is up, the hero and navigation animations are held at their first
+   frame rather than playing out of sight behind the curtain.
+--------------------------------------------------------------------------- */
+.loader {
+  position: fixed;
+  inset: 0;
+  z-index: 10000;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  background-color: var(--color-paper);
+}
+
+html.is-loading .loader,
+html.is-leaving .loader {
+  display: flex;
+}
+
+html.is-loading {
+  overflow: hidden;
+}
+
+html.is-leaving .loader {
+  animation: loader-lift 0.9s cubic-bezier(0.7, 0, 0.2, 1) forwards;
+}
+
+@keyframes loader-lift {
+  from {
+    transform: translateY(0);
+  }
+  to {
+    transform: translateY(-100%);
+  }
+}
+
+.loader-inner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.25rem;
+}
+
+.loader-name {
+  font-family: var(--font-display);
+  font-size: 0.75rem;
+  letter-spacing: 0.26em;
+  text-transform: uppercase;
+  color: var(--color-ink-muted);
+}
+
+.loader-track {
+  display: block;
+  width: 180px;
+  height: 1px;
+  overflow: hidden;
+  background-color: var(--color-line-strong);
+}
+
+.loader-bar {
+  display: block;
+  height: 100%;
+  width: 100%;
+  background-color: var(--color-ink);
+  transform: scaleX(0);
+  transform-origin: left;
+  animation: loader-bar 1.6s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+
+@keyframes loader-bar {
+  to {
+    transform: scaleX(1);
+  }
+}
+
+/* However early the page finished, the bar reads as complete on the way out. */
+html.is-leaving .loader-bar {
+  animation: none;
+  transform: scaleX(1);
+}
+
+/* Hold the entrances until the curtain starts to lift. */
+html.is-loading .animate-rise,
+html.is-loading .animate-glow-up,
+html.is-loading .animate-nav-in {
+  animation-play-state: paused;
 }
 
 /* Oversized section labels: /WORK, /ABOUT, … */
