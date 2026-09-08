@@ -15,7 +15,7 @@ export function SectionHeading({ label, intro, count, dark = false }: SectionHea
   const muted = dark ? 'text-night-muted' : 'text-ink-muted'
 
   return (
-    <Reveal className={`border-t ${rule} pt-6`}>
+    <Reveal className={`border-t ${rule} `}>
       <div className="flex flex-col gap-8 lg:flex-row lg:items-start lg:justify-between lg:gap-16">
         <h2 className="section-label flex items-baseline gap-1 text-[clamp(2.25rem,6vw,5rem)] leading-[0.9]">
           <span className={muted} aria-hidden="true">
