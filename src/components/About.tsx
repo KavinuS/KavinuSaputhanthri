@@ -16,7 +16,7 @@ export function About() {
       <Container>
         <SectionHeading label="About" />
 
-        <div className="mt-14 grid gap-12 lg:mt-20 lg:grid-cols-12 lg:gap-16">
+        <div className="mt-14 grid gap-12 lg:mt-16 lg:grid-cols-12 lg:gap-16">
           <Reveal className="lg:col-span-7">
             <p className="text-balance font-display text-[clamp(1.4rem,2.9vw,2.35rem)] font-medium leading-[1.25] tracking-tight">
               I&apos;m a third-year Information Technology undergraduate at the University of

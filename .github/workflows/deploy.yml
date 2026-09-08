@@ -22,7 +22,7 @@ jobs:
   build:
     runs-on: ubuntu-latest
     env:
-      # The repo is served from https://<user>.github.io/KavinuS/, so every
+      # The repo is served from https://<user>.github.io/<repo>/, so every
       # asset URL needs that prefix. next.config.ts reads this.
       NEXT_PUBLIC_BASE_PATH: /${{ github.event.repository.name }}
     steps:
