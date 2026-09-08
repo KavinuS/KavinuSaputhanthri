@@ -6,7 +6,7 @@ import { skillGroups } from '@/data/skills'
 /** Typographic, deliberately without proficiency bars or invented percentages. */
 export function Skills() {
   return (
-    <section id="skills" className="py-section">
+    <section id="skills" >
       <Container>
         <SectionHeading label="Tech Stack" />
 

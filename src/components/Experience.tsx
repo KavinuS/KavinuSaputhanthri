@@ -11,7 +11,7 @@ export function Experience() {
   return (
     <section
       id="experience"
-      className="relative overflow-hidden bg-night py-section text-white"
+      className="relative overflow-hidden bg-night  text-white"
     >
       <span
         aria-hidden="true"

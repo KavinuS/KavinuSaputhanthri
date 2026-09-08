@@ -21,7 +21,7 @@ const tierStyles = {
 
 export function Achievements() {
   return (
-    <section id="achievements" className="py-section">
+    <section id="achievements">
       <Container>
         <SectionHeading
           label="Achievements"

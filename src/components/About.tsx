@@ -12,7 +12,7 @@ const interests = [
 
 export function About() {
   return (
-    <section id="about" className="py-section">
+    <section id="about" >
       <Container>
         <SectionHeading label="About" />
 
