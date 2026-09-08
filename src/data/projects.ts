@@ -40,6 +40,12 @@ export type Project = {
   links: ProjectLink[]
   /** Path under /public/projects. Replace with real screenshots when you have them. */
   image: string
+  /**
+   * Intrinsic pixel size of `image`. Screenshots come in at whatever ratio the
+   * capture had, so the aspect ratio has to travel with the file or the browser
+   * reserves the wrong height and the card jumps once the image loads.
+   */
+  imageSize: { width: number; height: number }
   featured: boolean
   /** Optional verified architecture flow, rendered as a diagram. */
   architecture?: { title: string; steps: ArchitectureStep[] }
@@ -104,7 +110,8 @@ export const projects: Project[] = [
       { label: 'Backend', href: 'https://github.com/KavinuS/Backend-' },
       { label: 'Frontend', href: 'https://github.com/KavinuS/frontend' },
     ],
-    image: '/projects/flashx.svg',
+    image: '/projects/flashx.png',
+    imageSize: { width: 1892, height: 910 },
     featured: true,
   },
   {
@@ -159,6 +166,7 @@ export const projects: Project[] = [
     },
     links: [{ label: 'GitHub', href: 'https://github.com/KavinuS/MediInsight-Ai' }],
     image: '/projects/mediinsight.svg',
+    imageSize: { width: 1600, height: 1000 },
     featured: true,
   },
   {
@@ -197,7 +205,8 @@ export const projects: Project[] = [
       { label: 'Backend', href: 'https://github.com/KavinuS/Ai-Code-Reviewer-Be' },
       { label: 'Frontend', href: 'https://github.com/KavinuS/Ai-Code-Reviewer-Fe' },
     ],
-    image: '/projects/ai-code-reviewer.svg',
+    image: '/projects/ai-code-reviewer.jpg',
+    imageSize: { width: 1427, height: 734 },
     featured: true,
   },
   {
@@ -231,6 +240,7 @@ export const projects: Project[] = [
     ],
     links: [{ label: 'GitHub', href: 'https://github.com/KavinuS/BioFusion' }],
     image: '/projects/biofusion.svg',
+    imageSize: { width: 1600, height: 1000 },
     featured: true,
   },
   {
@@ -251,6 +261,7 @@ export const projects: Project[] = [
     stack: ['WebSockets', 'Firebase Cloud Messaging', 'REST APIs'],
     links: [],
     image: '/projects/auditra.svg',
+    imageSize: { width: 1600, height: 1000 },
     featured: false,
     note: 'Team project — the repository is not public, so this entry lists only my own contributions.',
   },
@@ -281,6 +292,7 @@ export const projects: Project[] = [
     ],
     links: [{ label: 'Backend', href: 'https://github.com/KavinuS/Gold-Victoria-Client-final--BE' }],
     image: '/projects/gold-victoria.svg',
+    imageSize: { width: 1600, height: 1000 },
     featured: false,
   },
 ]

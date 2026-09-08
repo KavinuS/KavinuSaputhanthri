@@ -98,8 +98,8 @@ export default async function ProjectPage({ params }: PageProps) {
             <Image
               src={asset(project.image)}
               alt=""
-              width={1600}
-              height={1000}
+              width={project.imageSize.width}
+              height={project.imageSize.height}
               priority
               sizes="100vw"
               className="h-auto w-full"

@@ -25,8 +25,8 @@ export function ProjectCard({ project, flipped }: { project: Project; flipped: b
             <Image
               src={asset(project.image)}
               alt=""
-              width={1200}
-              height={750}
+              width={project.imageSize.width}
+              height={project.imageSize.height}
               sizes="(max-width: 1024px) 100vw, 58vw"
               className="h-auto w-full transition-transform duration-700 ease-out group-hover:scale-[1.03] motion-reduce:transition-none motion-reduce:group-hover:scale-100"
             />
