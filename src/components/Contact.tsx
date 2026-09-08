@@ -12,7 +12,7 @@ const channels = [
 
 export function Contact() {
   return (
-    <section id="contact" className="border-t border-line ">
+    <section id="contact" className="border-t border-line py-section">
       <Container>
         <Reveal>
           <h2 className="text-balance font-display text-[clamp(2.5rem,9vw,8rem)] font-bold uppercase leading-[0.88] tracking-[-0.035em]">

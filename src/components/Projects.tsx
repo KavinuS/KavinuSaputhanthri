@@ -5,7 +5,7 @@ import { projects } from '@/data/projects'
 
 export function Projects() {
   return (
-    <section id="work" >
+    <section id="work" className="py-section">
       <Container>
         <SectionHeading
           label="Selected Work"

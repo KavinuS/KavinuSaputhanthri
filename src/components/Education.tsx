@@ -5,7 +5,7 @@ import { education } from '@/data/education'
 
 export function Education() {
   return (
-    <section id="education" >
+    <section id="education" className="py-section">
       <Container>
         <SectionHeading label="Education" />
 
