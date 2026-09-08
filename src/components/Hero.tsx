@@ -16,7 +16,7 @@ import { asset } from '@/lib/base-path'
  */
 export function Hero() {
   return (
-    <section id="top" className="relative overflow-hidden pt-28 sm:pt-20 lg:pt-4">
+    <section id="top" className="relative overflow-hidden pt-28 sm:pt-20 lg:pt-8">
       <Container>
         <h1 className="sr-only">
           {site.name} — {site.roles.join(', ')}
