@@ -25,7 +25,7 @@ export const site = {
   linkedin: 'https://www.linkedin.com/in/kavinu-saputhanthri-789290329/',
   resume: '/Kavinu-Saputhanthri-CV.pdf',
   /** Composed hero artwork: the name lockup and portrait in one image. */
-  heroImage: 'images/hero-name-portrait.png',
+  heroImage: '/images/hero-name-portrait.png',
   url: 'https://kavinu.dev',
 } as const
 
