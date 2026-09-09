@@ -57,7 +57,7 @@ export function Hero() {
             </p>
 
             <a
-              href="/#work"
+              href={asset('/#work')}
               className="group mt-7 inline-flex items-center gap-2.5 rounded-full bg-ink px-7 py-3.5 text-sm font-medium text-paper transition-colors duration-300 hover:bg-ink-soft motion-reduce:transition-none"
             >
               View My Work

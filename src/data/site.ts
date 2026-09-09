@@ -29,7 +29,14 @@ export const site = {
   url: 'https://kavinu.dev',
 } as const
 
-// Root-relative so the same nav works from the home page and from /work/[slug].
+/**
+ * Root-relative so the same nav works from the home page and from /work/[slug].
+ *
+ * Because they are root-relative they MUST be passed through `asset()` before
+ * they reach an `href`. Next applies `basePath` to `next/link` only, so a plain
+ * `<a href="/#contact">` on a site served from /<repo>/ walks off to the domain
+ * root and lands on GitHub's "There isn't a GitHub Pages site here" page.
+ */
 export const navLinks = [
   { label: 'Work', href: '/#work' },
   { label: 'About', href: '/#about' },
