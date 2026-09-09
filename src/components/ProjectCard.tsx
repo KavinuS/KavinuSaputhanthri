@@ -1,5 +1,6 @@
 import Image from 'next/image'
 import Link from 'next/link'
+import { ProjectGallery } from './ProjectGallery'
 import { Reveal } from './ui/Reveal'
 import type { Project } from '@/data/projects'
 import { asset } from '@/lib/base-path'
@@ -16,28 +17,31 @@ export function ProjectCard({ project, flipped }: { project: Project; flipped: b
       <article className="grid gap-8 lg:grid-cols-12 lg:items-center lg:gap-14">
         {/* Visual */}
         <div className={flipped ? 'lg:order-2 lg:col-span-7' : 'lg:col-span-7'}>
-          <Link
-            href={`/work/${project.slug}`}
-            className="group relative block overflow-hidden rounded-lg border border-line bg-paper-raised"
-            tabIndex={-1}
-            aria-hidden="true"
-          >
-            <Image
-              src={asset(project.image)}
-              alt=""
-              width={project.imageSize.width}
-              height={project.imageSize.height}
-              sizes="(max-width: 1024px) 100vw, 58vw"
-              className="h-auto w-full transition-transform duration-700 ease-out group-hover:scale-[1.03] motion-reduce:transition-none motion-reduce:group-hover:scale-100"
-            />
-
-            {/* Tells the reader the detail page has more than this one frame. */}
-            {project.gallery && project.gallery.length > 1 ? (
-              <span className="absolute bottom-3 right-3 rounded-full border border-line-strong bg-paper/85 px-3 py-1 font-display text-xs tabular-nums text-ink-muted backdrop-blur-sm">
-                {project.gallery.length} screens
-              </span>
-            ) : null}
-          </Link>
+          {project.gallery && project.gallery.length > 1 ? (
+            /*
+             * A gallery cannot be wrapped in the usual link-to-project: its
+             * arrows and dots are interactive, and nesting those inside an
+             * anchor is invalid and unreachable by keyboard. The title and the
+             * "View Project" link in the copy column carry the navigation.
+             */
+            <ProjectGallery images={project.gallery} title={project.title} variant="card" />
+          ) : (
+            <Link
+              href={`/work/${project.slug}`}
+              className="group block overflow-hidden rounded-lg border border-line bg-paper-raised"
+              tabIndex={-1}
+              aria-hidden="true"
+            >
+              <Image
+                src={asset(project.image)}
+                alt=""
+                width={project.imageSize.width}
+                height={project.imageSize.height}
+                sizes="(max-width: 1024px) 100vw, 58vw"
+                className="h-auto w-full transition-transform duration-700 ease-out group-hover:scale-[1.03] motion-reduce:transition-none motion-reduce:group-hover:scale-100"
+              />
+            </Link>
+          )}
         </div>
 
         {/* Copy */}

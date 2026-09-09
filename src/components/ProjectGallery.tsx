@@ -18,10 +18,25 @@ import { asset } from '@/lib/base-path'
  * Every slide is exactly one container wide, which is what lets the active
  * index be read straight back off `scrollLeft` while the reader drags.
  */
-export function ProjectGallery({ images, title }: { images: ProjectImage[]; title: string }) {
+export function ProjectGallery({
+  images,
+  title,
+  /**
+   * `page` is the detail-page lead visual: captioned, with a thumbnail strip.
+   * `card` is the compact form used in the Selected Work list, where six of
+   * these sit on one page and a thumbnail strip under each would be noise.
+   */
+  variant = 'page',
+}: {
+  images: ProjectImage[]
+  title: string
+  variant?: 'page' | 'card'
+}) {
   const reduceMotion = useReducedMotion()
   const trackRef = useRef<HTMLUListElement>(null)
   const [active, setActive] = useState(0)
+
+  const isCard = variant === 'card'
 
   const scrollToIndex = useCallback(
     (index: number) => {
@@ -81,11 +96,12 @@ export function ProjectGallery({ images, title }: { images: ProjectImage[]; titl
                 alt={image.caption ? `${title} — ${image.caption}` : ''}
                 width={image.width}
                 height={image.height}
-                // The first slide is the page's lead visual, so it must not wait
-                // for the lazy-loading observer; the rest are off-screen.
-                loading={index === 0 ? 'eager' : 'lazy'}
-                fetchPriority={index === 0 ? 'high' : 'auto'}
-                sizes="100vw"
+                // On the detail page the first slide is the lead visual, so it
+                // must not wait for the lazy-loading observer. In the card list
+                // every gallery is below the fold, so all of it can wait.
+                loading={!isCard && index === 0 ? 'eager' : 'lazy'}
+                fetchPriority={!isCard && index === 0 ? 'high' : 'auto'}
+                sizes={isCard ? '(max-width: 1024px) 100vw, 58vw' : '100vw'}
                 // A fixed frame keeps the gallery from resizing under the reader
                 // when a slide has a slightly different capture ratio, and
                 // `contain` means no part of a screenshot is ever cropped away.
@@ -108,39 +124,75 @@ export function ProjectGallery({ images, title }: { images: ProjectImage[]; titl
         </p>
       </div>
 
-      {/* Thumbnails double as the position indicator, so there are no dots. */}
-      <ul className="mt-3 flex gap-2 overflow-x-auto pb-1 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
-        {images.map((image, index) => (
-          <li key={image.src} className="shrink-0">
-            <button
-              type="button"
-              onClick={() => scrollToIndex(index)}
-              aria-current={index === active}
-              aria-label={`Show screenshot ${index + 1}${image.caption ? `: ${image.caption}` : ''}`}
-              className={`block overflow-hidden rounded border transition-opacity duration-300 motion-reduce:transition-none ${
-                index === active
-                  ? 'border-ink opacity-100'
-                  : 'border-line opacity-55 hover:opacity-100'
-              }`}
-            >
-              <Image
-                src={asset(image.src)}
-                alt=""
-                width={image.width}
-                height={image.height}
-                loading="lazy"
-                sizes="120px"
-                className="h-12 w-20 bg-paper-raised object-cover object-top sm:h-14 sm:w-24"
-              />
-            </button>
-          </li>
-        ))}
-      </ul>
+      {isCard ? (
+        <GalleryDots count={images.length} active={active} onSelect={scrollToIndex} title={title} />
+      ) : (
+        /* Thumbnails double as the position indicator, so there are no dots. */
+        <ul className="mt-3 flex gap-2 overflow-x-auto pb-1 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+          {images.map((image, index) => (
+            <li key={image.src} className="shrink-0">
+              <button
+                type="button"
+                onClick={() => scrollToIndex(index)}
+                aria-current={index === active}
+                aria-label={`Show screenshot ${index + 1}${image.caption ? `: ${image.caption}` : ''}`}
+                className={`block overflow-hidden rounded border transition-opacity duration-300 motion-reduce:transition-none ${
+                  index === active
+                    ? 'border-ink opacity-100'
+                    : 'border-line opacity-55 hover:opacity-100'
+                }`}
+              >
+                <Image
+                  src={asset(image.src)}
+                  alt=""
+                  width={image.width}
+                  height={image.height}
+                  loading="lazy"
+                  sizes="120px"
+                  className="h-12 w-20 bg-paper-raised object-cover object-top sm:h-14 sm:w-24"
+                />
+              </button>
+            </li>
+          ))}
+        </ul>
+      )}
 
-      {images[active]?.caption ? (
+      {!isCard && images[active]?.caption ? (
         <figcaption className="mt-3 text-sm text-ink-muted">{images[active].caption}</figcaption>
       ) : null}
     </figure>
+  )
+}
+
+function GalleryDots({
+  count,
+  active,
+  onSelect,
+  title,
+}: {
+  count: number
+  active: number
+  onSelect: (index: number) => void
+  title: string
+}) {
+  return (
+    <ul className="mt-4 flex flex-wrap items-center gap-2" aria-label={`${title} gallery position`}>
+      {Array.from({ length: count }, (_, index) => (
+        <li key={index}>
+          <button
+            type="button"
+            onClick={() => onSelect(index)}
+            aria-current={index === active}
+            aria-label={`Show screenshot ${index + 1} of ${count}`}
+            // A wider bar for the active slide rather than a filled dot: it
+            // reads as position on a strip, and survives being monochrome.
+            className={`block h-1 rounded-full transition-all duration-300 motion-reduce:transition-none ${
+              index === active ? 'w-7 bg-ink' : 'w-3 bg-line-strong hover:bg-ink-muted'
+            }`}
+          />
+        </li>
+      ))}
+    </ul>
   )
 }
 
