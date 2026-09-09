@@ -14,8 +14,8 @@ export const achievements: Achievement[] = [
     year: '2026',
     placement: 'Champion',
     tier: 'champion',
-    event: 'AI Code Challenge',
-    organiser: 'IEEE Society, KDU',
+    event: 'AI Challenge SriLanka 2026',
+    organiser: 'IEEE young Assosciation IEEE Sri Lanka Section',
   },
   {
     year: '2025',
