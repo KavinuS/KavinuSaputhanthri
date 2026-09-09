@@ -1,7 +1,6 @@
 'use client'
 
 import Image from 'next/image'
-import { useReducedMotion } from 'framer-motion'
 import { useCallback, useEffect, useRef, useState, type KeyboardEvent, type UIEvent } from 'react'
 import type { ProjectImage } from '@/data/projects'
 import { asset } from '@/lib/base-path'
@@ -42,7 +41,6 @@ export function ProjectGallery({
   autoPlay?: boolean
   interval?: number
 }) {
-  const reduceMotion = useReducedMotion()
   const trackRef = useRef<HTMLUListElement>(null)
   const frameRef = useRef<number | null>(null)
   const figureRef = useRef<HTMLElement>(null)
@@ -94,11 +92,6 @@ export function ProjectGallery({
       const distance = to - from
       if (Math.abs(distance) < 1) return
 
-      if (reduceMotion) {
-        track.scrollLeft = to
-        return
-      }
-
       // Long jumps from a dot press earn a little more time than a step of one.
       const slides = Math.abs(distance) / Math.max(track.clientWidth, 1)
       const duration = Math.min(900, 420 + slides * 120)
@@ -126,7 +119,7 @@ export function ProjectGallery({
 
       frameRef.current = requestAnimationFrame(step)
     },
-    [images.length, reduceMotion, stopAnimation],
+    [images.length, stopAnimation],
   )
 
   // Autoplay in a gallery scrolled past is wasted work and wasted battery, so
@@ -143,8 +136,16 @@ export function ProjectGallery({
     return () => observer.disconnect()
   }, [])
 
-  const autoPlaying =
-    autoPlay && playing && !held && onScreen && !reduceMotion && images.length > 1
+  /**
+   * Note: deliberately does not consult `prefers-reduced-motion`.
+   *
+   * The usual reading of that setting is that a gallery should not advance on
+   * its own, and this component honoured it until the site owner asked for
+   * autoplay unconditionally. The Pause control below is therefore the only
+   * accommodation left for a reader who does not want the movement, so it has
+   * to stay, and it has to stay visible rather than appearing on hover.
+   */
+  const autoPlaying = autoPlay && playing && !held && onScreen && images.length > 1
 
   /**
    * Advances the gallery on a timer.
@@ -253,7 +254,7 @@ export function ProjectGallery({
           Anything that moves on its own needs a way to stop it — this is the
           one control that is not just a shortcut for scrolling the track.
         */}
-        {autoPlay && !reduceMotion && images.length > 1 ? (
+        {autoPlay && images.length > 1 ? (
           <button
             type="button"
             onClick={() => setPlaying((current) => !current)}
