@@ -129,8 +129,8 @@ export const projects: Project[] = [
     ],
     image: '/projects/flashx.png',
     imageSize: { width: 1892, height: 910 },
-    // Ordered as the buyer meets them: landing, browse, one sale, cart,
-    // confirmation, account.
+    // Ordered as the buyer meets them, then the operator's side of the same
+    // sale. Paths point straight at the folder the screenshots arrived in.
     gallery: [
       {
         src: '/projects/flashx.png',
@@ -139,41 +139,56 @@ export const projects: Project[] = [
         caption: 'Landing page — the sale framed by the numbers the system is built to hold.',
       },
       {
-        src: '/projects/flashx/home-flash-deals.jpeg',
+        src: '/projects/FlashX-Pics/WhatsApp Image 2026-09-09 at 20.43.47.jpeg',
         width: 1423,
         height: 751,
         caption: 'Live deals, each with the remaining stock counter that checkout claims against.',
       },
       {
-        src: '/projects/flashx/flash-sales-board.jpeg',
+        src: '/projects/FlashX-Pics/WhatsApp Image 2026-09-09 at 20.43.48.jpeg',
         width: 1424,
         height: 750,
         caption: 'The full sale board — live, scheduled, sold out and closed — with search.',
       },
       {
-        src: '/projects/flashx/sale-detail.jpeg',
+        src: '/projects/FlashX-Pics/WhatsApp Image 2026-09-09 at 20.43.48 (2).jpeg',
         width: 1420,
         height: 746,
-        caption: 'A single sale: countdown, remaining allocation, and the cart-is-not-a-reservation note.',
+        caption:
+          'A single sale: countdown, remaining allocation, and the cart-is-not-a-reservation note.',
       },
       {
-        src: '/projects/flashx/cart.jpeg',
+        src: '/projects/FlashX-Pics/WhatsApp Image 2026-09-09 at 20.43.48 (1).jpeg',
         width: 1424,
         height: 747,
         caption: 'The cart holds an intention to buy; nothing is reserved until checkout runs.',
       },
       {
-        src: '/projects/flashx/order-confirmed.jpeg',
+        src: '/projects/FlashX-Pics/WhatsApp Image 2026-09-09 at 20.43.49.jpeg',
         width: 1424,
         height: 749,
         caption:
           'A confirmed order traced end to end — Redis reservation, broker hand-off, ACID write — with its correlation id and idempotency key.',
       },
       {
-        src: '/projects/flashx/dashboard.jpeg',
+        src: '/projects/FlashX-Pics/WhatsApp Image 2026-09-09 at 20.43.49 (1).jpeg',
         width: 1420,
         height: 746,
         caption: 'The buyer dashboard: order counts, spend and recent reservations.',
+      },
+      {
+        src: '/projects/FlashX-Pics/WhatsApp Image 2026-09-09 at 21.43.15.jpeg',
+        width: 1437,
+        height: 747,
+        caption:
+          'Ops console — the product catalogue a sale draws from, and the ceiling on what it may allocate.',
+      },
+      {
+        src: '/projects/FlashX-Pics/WhatsApp Image 2026-09-09 at 21.43.16.jpeg',
+        width: 1435,
+        height: 749,
+        caption:
+          'Ops console — scheduling and activation; activating a sale is what pre-warms its Redis counter.',
       },
     ],
     featured: true,
@@ -271,6 +286,28 @@ export const projects: Project[] = [
     ],
     image: '/projects/ai-code-reviewer.jpg',
     imageSize: { width: 1427, height: 734 },
+    gallery: [
+      {
+        src: '/projects/ai-code-reviewer.jpg',
+        width: 1427,
+        height: 734,
+        caption:
+          'A finished review: a score out of 100, the per-category breakdown behind it, and every issue found.',
+      },
+      {
+        src: '/projects/Ai Code Reviewer/WhatsApp Image 2026-09-09 at 21.39.31.jpeg',
+        width: 1600,
+        height: 973,
+        caption:
+          'The submission form beside the marking scheme it will be graded against — the categories are fixed before the model runs.',
+      },
+      {
+        src: '/projects/Ai Code Reviewer/WhatsApp Image 2026-09-09 at 21.39.32.jpeg',
+        width: 1600,
+        height: 710,
+        caption: 'Stored review history, so past runs stay inspectable and comparable.',
+      },
+    ],
     featured: true,
   },
   {

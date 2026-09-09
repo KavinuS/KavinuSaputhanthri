@@ -2,7 +2,7 @@
 
 import Image from 'next/image'
 import { useReducedMotion } from 'framer-motion'
-import { useCallback, useRef, useState, type KeyboardEvent, type UIEvent } from 'react'
+import { useCallback, useEffect, useRef, useState, type KeyboardEvent, type UIEvent } from 'react'
 import type { ProjectImage } from '@/data/projects'
 import { asset } from '@/lib/base-path'
 
@@ -34,22 +34,82 @@ export function ProjectGallery({
 }) {
   const reduceMotion = useReducedMotion()
   const trackRef = useRef<HTMLUListElement>(null)
+  const frameRef = useRef<number | null>(null)
   const [active, setActive] = useState(0)
 
   const isCard = variant === 'card'
 
+  const stopAnimation = useCallback(() => {
+    if (frameRef.current === null) return
+    cancelAnimationFrame(frameRef.current)
+    frameRef.current = null
+
+    // Snapping is switched off for the duration of a scripted slide (see
+    // below), so it has to come back the moment that slide ends or is cut off.
+    const track = trackRef.current
+    if (track) track.style.scrollSnapType = ''
+  }, [])
+
+  useEffect(() => stopAnimation, [stopAnimation])
+
+  /**
+   * Slides the track to a given image.
+   *
+   * This drives `scrollLeft` frame by frame rather than calling `scrollTo` with
+   * `behavior: 'smooth'`. Two things kept the native version from ever being
+   * seen: `scroll-snap-type: mandatory` cuts a scripted smooth scroll short in
+   * several browsers, landing on the snap point immediately, and the whole
+   * animation collapsed to a jump for anyone whose system asks for reduced
+   * motion. Snapping is therefore suspended while the slide runs — it is only
+   * needed to settle a *manual* drag — and the easing is applied here, where
+   * the duration is known and the result is the same in every browser.
+   */
   const scrollToIndex = useCallback(
     (index: number) => {
       const track = trackRef.current
       if (!track) return
 
+      stopAnimation()
+
       const clamped = Math.max(0, Math.min(index, images.length - 1))
-      track.scrollTo({
-        left: clamped * track.clientWidth,
-        behavior: reduceMotion ? 'auto' : 'smooth',
-      })
+      const from = track.scrollLeft
+      const to = clamped * track.clientWidth
+      const distance = to - from
+      if (Math.abs(distance) < 1) return
+
+      if (reduceMotion) {
+        track.scrollLeft = to
+        return
+      }
+
+      // Long jumps from a dot press earn a little more time than a step of one.
+      const slides = Math.abs(distance) / Math.max(track.clientWidth, 1)
+      const duration = Math.min(900, 420 + slides * 120)
+      const start = performance.now()
+
+      track.style.scrollSnapType = 'none'
+
+      const step = (now: number) => {
+        const progress = Math.min(1, (now - start) / duration)
+        // easeInOutCubic — settles rather than stopping dead on arrival.
+        const eased =
+          progress < 0.5
+            ? 4 * progress * progress * progress
+            : 1 - Math.pow(-2 * progress + 2, 3) / 2
+
+        track.scrollLeft = from + distance * eased
+
+        if (progress < 1) {
+          frameRef.current = requestAnimationFrame(step)
+        } else {
+          frameRef.current = null
+          track.style.scrollSnapType = ''
+        }
+      }
+
+      frameRef.current = requestAnimationFrame(step)
     },
-    [images.length, reduceMotion],
+    [images.length, reduceMotion, stopAnimation],
   )
 
   // The scroll position is the state; this only mirrors it for the controls.
@@ -81,6 +141,10 @@ export function ProjectGallery({
           ref={trackRef}
           onScroll={handleScroll}
           onKeyDown={handleKeyDown}
+          // A reader who grabs the track mid-slide outranks the animation.
+          onPointerDown={stopAnimation}
+          onWheel={stopAnimation}
+          onTouchStart={stopAnimation}
           tabIndex={0}
           aria-label={`${title} screenshots`}
           className="flex snap-x snap-mandatory overflow-x-auto overscroll-x-contain [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"

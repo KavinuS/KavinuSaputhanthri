@@ -9,7 +9,14 @@
  */
 export const basePath = process.env.NEXT_PUBLIC_BASE_PATH ?? ''
 
-/** Turns a root-relative public path into one the deployed site can serve. */
+/**
+ * Turns a root-relative public path into one the deployed site can serve.
+ *
+ * The path is URI-encoded because screenshot folders arrive named the way the
+ * camera roll or the download named them — spaces, parentheses — and a raw
+ * space in an `src` is not a valid URL. `encodeURI` leaves `/` alone, so the
+ * path structure survives, and it is a no-op for names that need no escaping.
+ */
 export function asset(path: string) {
-  return `${basePath}${path}`
+  return `${basePath}${encodeURI(path)}`
 }
