@@ -193,6 +193,28 @@ export const projects: Project[] = [
     ],
     featured: true,
   },
+   {
+    slug: 'auditra',
+    index: '05',
+    title: 'Auditra',
+    category: 'Team Project · Real-Time Web',
+    summary: 'An auditing and valuation ERP built as a second-year university team project.',
+    overview:
+      'A team-built ERP for auditing and valuation workflows. My contribution centred on the onboarding flows and on the real-time layer that keeps collaborators in sync.',
+    highlights: [
+      'Built the client onboarding and employee onboarding flows, including the forms and their validation.',
+      'Implemented the real-time communication layer over WebSockets.',
+      'Added chat with mentions, and invitation tracking across the onboarding flow.',
+      'Wired push notifications through Firebase Cloud Messaging.',
+    ],
+    primaryStack: ['WebSockets', 'Firebase Cloud Messaging'],
+    stack: ['WebSockets', 'Firebase Cloud Messaging', 'REST APIs'],
+    links: [],
+    image: '/projects/auditra.svg',
+    imageSize: { width: 1600, height: 1000 },
+    featured: false,
+    note: 'Team project — the repository is not public, so this entry lists only my own contributions.',
+  },
   {
     slug: 'mediinsight-ai',
     index: '02',
@@ -344,28 +366,7 @@ export const projects: Project[] = [
     imageSize: { width: 1600, height: 1000 },
     featured: true,
   },
-  {
-    slug: 'auditra',
-    index: '05',
-    title: 'Auditra',
-    category: 'Team Project · Real-Time Web',
-    summary: 'An auditing and valuation ERP built as a second-year university team project.',
-    overview:
-      'A team-built ERP for auditing and valuation workflows. My contribution centred on the onboarding flows and on the real-time layer that keeps collaborators in sync.',
-    highlights: [
-      'Built the client onboarding and employee onboarding flows, including the forms and their validation.',
-      'Implemented the real-time communication layer over WebSockets.',
-      'Added chat with mentions, and invitation tracking across the onboarding flow.',
-      'Wired push notifications through Firebase Cloud Messaging.',
-    ],
-    primaryStack: ['WebSockets', 'Firebase Cloud Messaging'],
-    stack: ['WebSockets', 'Firebase Cloud Messaging', 'REST APIs'],
-    links: [],
-    image: '/projects/auditra.svg',
-    imageSize: { width: 1600, height: 1000 },
-    featured: false,
-    note: 'Team project — the repository is not public, so this entry lists only my own contributions.',
-  },
+ 
   {
     slug: 'gold-victoria',
     index: '06',

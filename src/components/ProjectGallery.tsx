@@ -27,15 +27,32 @@ export function ProjectGallery({
    * these sit on one page and a thumbnail strip under each would be noise.
    */
   variant = 'page',
+  /**
+   * Advance on a timer. On by default for cards, where the gallery has to show
+   * that it is a gallery without being touched; off for the detail page, where
+   * moving the image out from under someone reading its caption is hostile.
+   */
+  autoPlay = variant === 'card',
+  /** Seconds each slide is held before the next one comes in. */
+  interval = 4.5,
 }: {
   images: ProjectImage[]
   title: string
   variant?: 'page' | 'card'
+  autoPlay?: boolean
+  interval?: number
 }) {
   const reduceMotion = useReducedMotion()
   const trackRef = useRef<HTMLUListElement>(null)
   const frameRef = useRef<number | null>(null)
+  const figureRef = useRef<HTMLElement>(null)
   const [active, setActive] = useState(0)
+  /** Set by the reader, via the pause control. Survives hover and scrolling. */
+  const [playing, setPlaying] = useState(true)
+  /** Momentary: pointer over the gallery, or focus somewhere inside it. */
+  const [held, setHeld] = useState(false)
+  /** Nothing should be moving in a gallery that is not on screen. */
+  const [onScreen, setOnScreen] = useState(false)
 
   const isCard = variant === 'card'
 
@@ -112,6 +129,42 @@ export function ProjectGallery({
     [images.length, reduceMotion, stopAnimation],
   )
 
+  // Autoplay in a gallery scrolled past is wasted work and wasted battery, so
+  // the timer below only runs while the gallery is actually on screen.
+  useEffect(() => {
+    const figure = figureRef.current
+    if (!figure || typeof IntersectionObserver === 'undefined') return
+
+    const observer = new IntersectionObserver(
+      ([entry]) => setOnScreen(entry.isIntersecting),
+      { threshold: 0.35 },
+    )
+    observer.observe(figure)
+    return () => observer.disconnect()
+  }, [])
+
+  const autoPlaying =
+    autoPlay && playing && !held && onScreen && !reduceMotion && images.length > 1
+
+  /**
+   * Advances the gallery on a timer.
+   *
+   * Keyed on `active`, so the clock restarts from zero every time the slide
+   * changes — including when the reader scrolls or presses an arrow. That is
+   * what stops the timer from firing a moment after someone has just chosen a
+   * slide for themselves, which is the thing that makes an auto-carousel feel
+   * like it is fighting you.
+   */
+  useEffect(() => {
+    if (!autoPlaying) return
+
+    const timer = setTimeout(
+      () => scrollToIndex(active === images.length - 1 ? 0 : active + 1),
+      interval * 1000,
+    )
+    return () => clearTimeout(timer)
+  }, [active, autoPlaying, images.length, interval, scrollToIndex])
+
   // The scroll position is the state; this only mirrors it for the controls.
   const handleScroll = (event: UIEvent<HTMLUListElement>) => {
     const track = event.currentTarget
@@ -135,7 +188,16 @@ export function ProjectGallery({
   const atEnd = active === images.length - 1
 
   return (
-    <figure className="m-0">
+    <figure
+      ref={figureRef}
+      className="m-0"
+      // Hovering or tabbing into the gallery is a signal that the reader is
+      // looking at this slide; hold it until they leave.
+      onMouseEnter={() => setHeld(true)}
+      onMouseLeave={() => setHeld(false)}
+      onFocus={() => setHeld(true)}
+      onBlur={() => setHeld(false)}
+    >
       <div className="relative overflow-hidden rounded-lg border border-line bg-paper-raised">
         <ul
           ref={trackRef}
@@ -186,6 +248,23 @@ export function ProjectGallery({
         <p className="pointer-events-none absolute bottom-3 right-3 rounded-full border border-line-strong bg-paper/85 px-3 py-1 font-display text-xs tabular-nums text-ink-muted backdrop-blur-sm">
           {String(active + 1).padStart(2, '0')} / {String(images.length).padStart(2, '0')}
         </p>
+
+        {/*
+          Anything that moves on its own needs a way to stop it — this is the
+          one control that is not just a shortcut for scrolling the track.
+        */}
+        {autoPlay && !reduceMotion && images.length > 1 ? (
+          <button
+            type="button"
+            onClick={() => setPlaying((current) => !current)}
+            aria-pressed={!playing}
+            aria-label={playing ? 'Pause the gallery' : 'Play the gallery'}
+            className="absolute bottom-3 left-3 flex h-8 items-center gap-1.5 rounded-full border border-line-strong bg-paper/85 px-3 font-display text-xs text-ink-muted backdrop-blur-sm transition-colors duration-300 hover:text-ink motion-reduce:transition-none"
+          >
+            <span aria-hidden="true">{playing ? '❚❚' : '▶'}</span>
+            {playing ? 'Pause' : 'Play'}
+          </button>
+        ) : null}
       </div>
 
       {isCard ? (
