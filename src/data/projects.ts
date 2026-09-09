@@ -20,6 +20,16 @@ export type ArchitectureStep = {
   detail: string
 }
 
+export type ProjectImage = {
+  /** Path under /public. */
+  src: string
+  /** Intrinsic pixel size — see the note on `Project.imageSize`. */
+  width: number
+  height: number
+  /** Shown under the gallery and used to build the alt text. */
+  caption?: string
+}
+
 export type Project = {
   slug: string
   index: string
@@ -46,6 +56,13 @@ export type Project = {
    * reserves the wrong height and the card jumps once the image loads.
    */
   imageSize: { width: number; height: number }
+  /**
+   * Screenshot tour shown on the detail page as a scrollable gallery.
+   *
+   * Optional: a project with only a cover falls back to rendering `image` on
+   * its own, so there is never a one-slide carousel with dead controls.
+   */
+  gallery?: ProjectImage[]
   featured: boolean
   /** Optional verified architecture flow, rendered as a diagram. */
   architecture?: { title: string; steps: ArchitectureStep[] }
@@ -112,6 +129,53 @@ export const projects: Project[] = [
     ],
     image: '/projects/flashx.png',
     imageSize: { width: 1892, height: 910 },
+    // Ordered as the buyer meets them: landing, browse, one sale, cart,
+    // confirmation, account.
+    gallery: [
+      {
+        src: '/projects/flashx.png',
+        width: 1892,
+        height: 910,
+        caption: 'Landing page — the sale framed by the numbers the system is built to hold.',
+      },
+      {
+        src: '/projects/flashx/home-flash-deals.jpeg',
+        width: 1423,
+        height: 751,
+        caption: 'Live deals, each with the remaining stock counter that checkout claims against.',
+      },
+      {
+        src: '/projects/flashx/flash-sales-board.jpeg',
+        width: 1424,
+        height: 750,
+        caption: 'The full sale board — live, scheduled, sold out and closed — with search.',
+      },
+      {
+        src: '/projects/flashx/sale-detail.jpeg',
+        width: 1420,
+        height: 746,
+        caption: 'A single sale: countdown, remaining allocation, and the cart-is-not-a-reservation note.',
+      },
+      {
+        src: '/projects/flashx/cart.jpeg',
+        width: 1424,
+        height: 747,
+        caption: 'The cart holds an intention to buy; nothing is reserved until checkout runs.',
+      },
+      {
+        src: '/projects/flashx/order-confirmed.jpeg',
+        width: 1424,
+        height: 749,
+        caption:
+          'A confirmed order traced end to end — Redis reservation, broker hand-off, ACID write — with its correlation id and idempotency key.',
+      },
+      {
+        src: '/projects/flashx/dashboard.jpeg',
+        width: 1420,
+        height: 746,
+        caption: 'The buyer dashboard: order counts, spend and recent reservations.',
+      },
+    ],
     featured: true,
   },
   {

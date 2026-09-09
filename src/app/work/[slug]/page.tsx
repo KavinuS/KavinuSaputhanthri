@@ -4,6 +4,7 @@ import Link from 'next/link'
 import { notFound } from 'next/navigation'
 import { Footer } from '@/components/Footer'
 import { ArchitectureFlow } from '@/components/ArchitectureFlow'
+import { ProjectGallery } from '@/components/ProjectGallery'
 import { Container } from '@/components/ui/Container'
 import { Reveal } from '@/components/ui/Reveal'
 import { getProject, projects } from '@/data/projects'
@@ -94,16 +95,23 @@ export default async function ProjectPage({ params }: PageProps) {
           </header>
 
           {/* ---- Visual ---- */}
-          <Reveal className="mt-14 overflow-hidden rounded-lg border border-line bg-paper-raised lg:mt-20">
-            <Image
-              src={asset(project.image)}
-              alt=""
-              width={project.imageSize.width}
-              height={project.imageSize.height}
-              priority
-              sizes="100vw"
-              className="h-auto w-full"
-            />
+          <Reveal className="mt-14 lg:mt-20">
+            {project.gallery && project.gallery.length > 1 ? (
+              <ProjectGallery images={project.gallery} title={project.title} />
+            ) : (
+              <div className="overflow-hidden rounded-lg border border-line bg-paper-raised">
+                <Image
+                  src={asset(project.image)}
+                  alt=""
+                  width={project.imageSize.width}
+                  height={project.imageSize.height}
+                  loading="eager"
+                  fetchPriority="high"
+                  sizes="100vw"
+                  className="h-auto w-full"
+                />
+              </div>
+            )}
           </Reveal>
 
           {/* ---- Overview & problem ---- */}
